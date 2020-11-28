@@ -13,7 +13,7 @@ MEMORY
 SECTIONS
 {
   /* The vector table must go at the start of flash */
-  .vector_table :
+  .isr_vector :
   {
     . = ALIGN(4);
     KEEP (*(.vector_table))
@@ -46,8 +46,8 @@ SECTIONS
     _sdata = .;
     *(.data)
     *(.data*)
-    _edata = .;
     . = ALIGN(4);
+    _edata = .;
   } >RAM
   
   /* The 'bss' section is similar to the 'data' section,

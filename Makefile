@@ -15,7 +15,7 @@ OBJ = $(OBJT:$(SRCDIR)/%=$(BLDDIR)/%)
 INCLUDE += -I./$(INCDIR)
 
 # Define the linker script and chip
-LD_SCRIPT = STM32F042K6_FLASH.ld
+LD_SCRIPT = STM32F042K6Tx.ld
 MCU_SPEC  = cortex-m0
 
 # Define the toolchain
@@ -29,26 +29,18 @@ OS = $(TOOLCHAIN)/bin/arm-none-eabi-size
 
 # Assembly directives
 ASFLAGS += -c
-# ASFLAGS += -Og -g3
+ASFLAGS += -O0
 ASFLAGS += -mcpu=$(MCU_SPEC)
 ASFLAGS += -mthumb
 ASFLAGS += -Wall
 ASFLAGS += -fmessage-length=0
 
 # C compilation directives
-CFLAGS += -mcpu=$(MCU_SPEC)
-CFLAGS += -mthumb
-CFLAGS += -Wall
-# CFLAGS += -g3
-# CFLAGS += -Og
-# CFLAGS += -fmessage-length=0
-# CFLAGS += --specs=nosys.specs
+CFLAGS += -mcpu=$(MCU_SPEC) -std=gnu11 -O0 -ffunction-sections -fdata-sections -Wall --specs=nano.specs -mfloat-abi=soft -mthumb
+CFLAGS += -fmessage-length=0
 
 # Linker directives.
-LFLAGS += -mcpu=$(MCU_SPEC)
-LFLAGS += -mthumb
-LFLAGS += -Wall
-# LFLAGS += --specs=nosys.specs
+LFLAGS += -mcpu=$(MCU_SPEC) --specs=nosys.specs -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 LFLAGS += -nostdlib
 # LFLAGS += -lgcc
 LFLAGS += -T$(LD_SCRIPT)
@@ -58,19 +50,18 @@ all: list-src $(BLDDIR)/$(TARGET).bin
 
 $(BLDDIR)/$(TARGET).bin : $(BLDDIR)/$(TARGET).elf | $(BLDDIR)
 	@echo -e '\e[1mCreating the binary:\e[0m $@'
-	@$(OC) -S -O binary $< $@
-	@echo -e '\e[1mCreating the hex file:\e[0m $@'
-	@$(OC) -O ihex --set-start 0x8000000 $< $@
+	@$(OC) -O binary $< $@
 
 $(BLDDIR)/$(TARGET).elf : $(OBJ)
 	@echo -e '\e[1mCreating the ELF:\e[0m $@'
 	@$(CC) $^ $(LFLAGS) -Wl,-Map,$(patsubst %.elf,%.map,$@) -o $@
-	@$(OD) -D $@ > $(patsubst %.elf,%.list,$@)
+	@$(OD) -DhS $@ > $(patsubst %.elf,%.list,$@)
 
 	@echo
 	@echo -e '\e[3mSection sizes:\e[0m'
 	@$(OS) $@
 	@echo
+	@rm $(BLDDIR)/*.o
 
 $(BLDDIR)/%.o : $(SRCDIR)/%.s | $(BLDDIR)
 	@echo -e '\e[1mCompiling file:\e[0m $@'
