@@ -2,9 +2,9 @@
 
 int main(void)
 {
-	RCC->AHBENR 	= 0x00020000;
-	GPIOA->MODER 	= 0x50000000;
-	GPIOA->ODR 		= 0x00008000;
+	RCC->AHBENR 	= 0x00040000;
+	GPIOB->MODER 	= 0x00005000;
+	GPIOB->ODR 		= 0x000000C0;
  
     while (1) {}
 }
