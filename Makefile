@@ -17,6 +17,7 @@ INCLUDE += -I./$(INCDIR)
 # Define the linker script and chip
 LD_SCRIPT = STM32F042K6Tx.ld
 MCU_SPEC  = cortex-m0
+OPTIM = -O0
 
 # Define the toolchain
 TOOLCHAIN = /usr
@@ -29,7 +30,7 @@ OS = $(TOOLCHAIN)/bin/arm-none-eabi-size
 
 # Assembly directives
 ASFLAGS += -c
-ASFLAGS += -O0
+ASFLAGS += $(OPTIM)
 ASFLAGS += -mcpu=$(MCU_SPEC)
 ASFLAGS += -mthumb
 ASFLAGS += -Wall
@@ -37,11 +38,11 @@ ASFLAGS += -fmessage-length=0
 
 # C compilation directives
 CFLAGS += -mcpu=$(MCU_SPEC) -std=gnu11 -O0 -ffunction-sections -fdata-sections -Wall --specs=nano.specs -mfloat-abi=soft -mthumb
-CFLAGS += -fmessage-length=0
+CFLAGS += -fmessage-length=0 $(OPTIM)
 
 # Linker directives.
 LFLAGS += -mcpu=$(MCU_SPEC) --specs=nosys.specs -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-LFLAGS += -nostdlib
+LFLAGS += -nostdlib $(OPTIM)
 # LFLAGS += -lgcc
 LFLAGS += -T$(LD_SCRIPT)
 
