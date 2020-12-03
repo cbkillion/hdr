@@ -17,7 +17,7 @@ void si446x_init(void)
 	if (si446x_commmand(REQUEST_DEVICE_STATE, 0, 0, buff2, sizeof(buff2)))
 		red_led_on();
 
-	if((buff2[0] == (uint8_t) 0x03) || (buff2[0] == (uint8_t) 0x04))
+	if((buff2[1] == 0xFF))
 		green_led_on();
 }
 
@@ -31,7 +31,6 @@ uint8_t si446x_commmand(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t 
 	spi_send(cmd);
 	if (tx_len && tx_buff)
 		spi_send_bulk(tx_buff, tx_len);
-	// delay(1);
 	spi_deselect_chip();
 
 	si446x_wait_for_cts();

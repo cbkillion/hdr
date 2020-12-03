@@ -32,9 +32,9 @@ void spi_disable(void)
 	tmp = SPI1->SR;
 }
 
-void spi_send_bulk(uint8_t * pData, uint16_t count)
+void spi_send_bulk(uint8_t * pData, uint8_t count)
 {
-	uint16_t _count = count;
+	uint8_t _count = count;
 	uint8_t * _pData = pData;
 
 	while (_count--)
@@ -44,13 +44,14 @@ void spi_send_bulk(uint8_t * pData, uint16_t count)
 void spi_send(uint8_t data)
 {
 	while (!(SPI1->SR & SPI_SR_TXE));
-	*(uint8_t*)&SPI1->DR = data;
+	IO8(&SPI1->DR) = data;
+	// *(uint8_t *)&SPI1->DR = data;
 }
 
-void spi_recv_bulk(uint8_t * pData, uint16_t count)
+void spi_recv_bulk(uint8_t * pData, uint8_t count)
 {
 	uint8_t * _pData = pData;
-	uint16_t _count = count;
+	uint8_t _count = count;
 
 	while (_count--)
 		*_pData++ = spi_recv();
@@ -60,10 +61,12 @@ uint8_t spi_recv(void)
 {	
 	// must send data to read data
 	while (!(SPI1->SR & SPI_SR_TXE));
-	*(uint8_t*)&SPI1->DR = (uint8_t) 0;
+	IO8(&SPI1->DR) = 0;
+	// *(uint8_t*)&SPI1->DR = (uint8_t) 0;
 	
 	while (!(SPI1->SR & SPI_SR_RXNE));
-	return (*(uint8_t*)&SPI1->DR);
+	return IO8(&SPI1->DR);
+	// return (*(uint8_t*)&SPI1->DR);
 }
 
 void spi_select_chip(void)
