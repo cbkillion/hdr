@@ -27,7 +27,6 @@ uint8_t si446x_commmand(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t 
 
 	// send command
 	spi_enable();
-	// spi_send(cmd);
 	spi_transfer(cmd);
 	if (tx_len && tx_buff)
 		spi_send_bulk(tx_buff, tx_len);
@@ -40,7 +39,6 @@ uint8_t si446x_commmand(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t 
 	if(rx_len && rx_buff)
 	{
 		spi_enable();
-		// spi_send(READ_CMD_BUFF);
 		spi_transfer(READ_CMD_BUFF);
 		spi_recv_bulk(rx_buff, rx_len);
 		spi_disable();
