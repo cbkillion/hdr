@@ -32,27 +32,27 @@ void spi_disable(void)
 void spi_send_bulk(uint8_t * pData, uint8_t count)
 {
 	uint8_t _count = count;
-	uint8_t * _pData = pData;
+	// uint8_t * _pData = pData;
 
 	while (_count--)
-		spi_transfer(*_pData++);
+		spi_transfer(*pData++);
 
 }
 
 void spi_recv_bulk(uint8_t * pData, uint8_t count)
 {
-	// wait for SPI to be done with what it's doing
+	// wait for SPI to finish what it is doing
 	while (SPI1->SR & SPI_SR_BSY);
 
 	// clear out the rx buffer
 	while (SPI1->SR & SPI_SR_RXNE)
 		IO8(&SPI1->DR);
 
-	uint8_t * _pData = pData;
+	// uint8_t * _pData = pData;
 	uint8_t _count = count;
 
 	while (_count--)
-		*_pData++ = spi_transfer(0);
+		*pData++ = spi_transfer(0);
 
 }
 
