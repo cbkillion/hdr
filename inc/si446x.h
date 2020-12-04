@@ -40,8 +40,7 @@
 
 void si446x_init(void);
 void si446x_por(void);
-void si446x_wait_for_cts(void);
-uint8_t si446x_commmand(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len,
-                    uint8_t * rx_buff, uint8_t rx_len);
+uint8_t si446x_wait_for_cts(void);
+uint8_t si446x_commmand(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t * rx_buff, uint8_t rx_len);
 
 #endif
