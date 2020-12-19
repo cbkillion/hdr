@@ -3,6 +3,7 @@
 
 #include "stm32f0xx.h"
 #include "spi.h"
+#include "si446x_config.h"
 
 #define CTS_RETRIES             1000
 #define CTS_SUCCESS             0xFF
@@ -15,7 +16,7 @@
 #define SET_PROPERTY            0x11
 #define GET_PROPERTY            0x12
 #define GPIO_PIN_CONFIG         0x13
-#define FIFO_CONFIG             0x15
+#define FIFO_INFO             0x15
 #define GET_INT_STATUS          0x20
 #define REQUEST_DEVICE_STATE    0x33
 #define CHANGE_STATE            0x34
@@ -38,9 +39,40 @@
 #define GET_PH_STATUS           0x21
 #define GET_CHIP_STATUS         0x23
 
-void si446x_init(void);
-void si446x_por(void);
+
+/*
+power up -- already got this one working
+gpio config (maybe) -- seems ridiculous to set everything to "no change"
+global config -- api states we need this {SET_PROPERTY: 0x00, 0x01, 0x03, 0x06}
+modem mod type -- can set to CW, or other mod types; can set source to PRNG {SET_PROPERTY: 0x20, 0x01, 0x00, 0x**}
+rf freq control -- sets rf frequency {SET_PROPERTY: 0x40, 0x08, 0x00, *, *, *, *, *, *, *, *}
+
+set tx power...?
+start_tx command!
+
+
+set it up to have 4GFSK modulation and 100kbps baud rate
+then you can have channels spaced every 250KHz between 902 and 928 MHz
+for a total of 102 channels
+*/
+
+void    si446x_init(void);
+void    si446x_power_on_reset(void);
 uint8_t si446x_wait_for_cts(void);
-uint8_t si446x_commmand(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t * rx_buff, uint8_t rx_len);
+uint8_t si446x_command(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t * rx_buff, uint8_t rx_len);
+void    si446x_pin_config(void);
+void    si446x_configure(const uint8_t * commands);
+
+void    si446x_send(uint8_t * buffer, uint16_t len, uint8_t channel);
+void    si446x_write_tx_fifo(uint8_t * buffer, uint8_t len);
+void    si446x_clear_tx_fifo(void);
+void    si446x_read_rx_fifo(uint8_t * buffer, uint8_t * len);
+void    si446x_clear_rx_fifo(void);
+
+uint8_t si446x_set_properties(uint16_t first_property, uint8_t count, uint8_t * properties);
+uint8_t si446x_get_properties(uint16_t first_property, uint8_t count, uint8_t * properties);
+
+void    si446x_start_tx(uint8_t channel);
+void    si446x_start_rx(uint8_t channel);
 
 #endif

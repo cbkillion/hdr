@@ -20,6 +20,10 @@
 #define RED_LED_PIN     6
 #define GREEN_LED_PIN   7
 
+#define nIRQ_PORT       GPIOB
+#define nIRQ_PIN        0
+
+
 void configure_clock(void);
 void gpio_init(void);
 

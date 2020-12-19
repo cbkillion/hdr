@@ -8,24 +8,47 @@ int main(void)
 	si446x_init();
  
 	// usb_init();
+	uint8_t tx_test[] = {0, 0, 0, 'A', 'D', '0', 'Z', 'F', 4, 'p', 'i', 'n', 'g'};
+	uint8_t pushed = 0;
+	uint8_t interrupt_status[9];
+	uint8_t rx_buffer[64];
+	uint8_t rx_len;
 
     while (1)
 	{
-		// spi_select_chip();
-		// delay(1000);
-		// spi_deselect_chip();
-		// delay(1000);
+		if (!gpio_read_pin(nIRQ_PORT, nIRQ_PIN))
+		{
+			si446x_command(GET_INT_STATUS, 0, 0, interrupt_status, sizeof(interrupt_status));
+			if (interrupt_status[3] & 0x10) // packet received
+			{
+				green_led_on();
+				si446x_clear_rx_fifo();
+				// si446x_read_rx_fifo(rx_buffer, &rx_len);
+			}
 
-		// if (read_button())
-		// {
-		// 	// GPIOB->ODR |= (1<<6);
-		// 	// red_led_on();
-		// }
-		// else
-		// {
-		// 	// GPIOB->ODR &= ~(1<<6);
-		// 	// red_led_off();
-		// }	
+			if (interrupt_status[3] == 0x08) // crc error...
+			{
+				red_led_on();
+			}
+		}
+
+
+		if (read_button() && !pushed)
+		{
+			red_led_off();
+			green_led_off();
+
+			pushed = 1;
+			si446x_send(tx_test, sizeof(tx_test), 0);
+			
+			// wait for packet sent interrupt, then clear by reading
+			while (gpio_read_pin(nIRQ_PORT, nIRQ_PIN));
+			si446x_command(GET_INT_STATUS, 0, 0, interrupt_status, sizeof(interrupt_status));
+		} 
+		if (!read_button())
+		{
+			pushed = 0;
+		}
 	}
 }
 
