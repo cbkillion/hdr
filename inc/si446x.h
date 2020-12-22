@@ -39,23 +39,6 @@
 #define GET_PH_STATUS           0x21
 #define GET_CHIP_STATUS         0x23
 
-
-/*
-power up -- already got this one working
-gpio config (maybe) -- seems ridiculous to set everything to "no change"
-global config -- api states we need this {SET_PROPERTY: 0x00, 0x01, 0x03, 0x06}
-modem mod type -- can set to CW, or other mod types; can set source to PRNG {SET_PROPERTY: 0x20, 0x01, 0x00, 0x**}
-rf freq control -- sets rf frequency {SET_PROPERTY: 0x40, 0x08, 0x00, *, *, *, *, *, *, *, *}
-
-set tx power...?
-start_tx command!
-
-
-set it up to have 4GFSK modulation and 100kbps baud rate
-then you can have channels spaced every 250KHz between 902 and 928 MHz
-for a total of 102 channels
-*/
-
 void    si446x_init(void);
 void    si446x_power_on_reset(void);
 uint8_t si446x_wait_for_cts(void);

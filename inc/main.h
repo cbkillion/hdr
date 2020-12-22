@@ -37,4 +37,6 @@ void red_led_off(void);
 void green_led_on(void);
 void green_led_off(void);
 
+void flash_led(uint8_t num_flashes);
+
 #endif

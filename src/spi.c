@@ -40,12 +40,12 @@ void spi_send_bulk(uint8_t * pData, uint8_t count)
 
 void spi_recv_bulk(uint8_t * pData, uint8_t count)
 {
-	// wait for SPI to finish what it is doing
-	while (SPI1->SR & SPI_SR_BSY);
+	// // wait for SPI to finish what it is doing
+	// while (SPI1->SR & SPI_SR_BSY);
 
-	// clear out the rx buffer
-	while (SPI1->SR & SPI_SR_RXNE)
-		IO8(&SPI1->DR);
+	// // clear out the rx buffer
+	// while (SPI1->SR & SPI_SR_RXNE)
+	// 	IO8(&SPI1->DR);
 
 	uint8_t _count = count;
 
@@ -62,5 +62,5 @@ uint8_t spi_transfer(uint8_t data)
 	while(!(SPI1->SR & SPI_SR_TXE)); // wait for tx buffer to be empty
 	IO8(&SPI1->DR) = data;	// start the transfer
 	while(SPI1->SR & SPI_SR_BSY); // wait for the data to send (should we wait on RXNE...?)
-	return IO8(&SPI1->DR); // read the respons to clear the rx buffer
+	return IO8(&SPI1->DR); // read the response to clear the rx buffer
 }

@@ -55,7 +55,11 @@ uint8_t si446x_command(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t *
 	{
 		spi_enable();
 		spi_transfer(READ_CMD_BUFF);
-		spi_recv_bulk(rx_buff, rx_len);
+		si446x_wait_for_cts();
+		if (spi_transfer(0) == 0xFF)
+		{
+			spi_recv_bulk(rx_buff, rx_len);
+		}
 		spi_disable();
 	}
 
@@ -104,8 +108,9 @@ void si446x_write_tx_fifo(uint8_t * buffer, uint8_t len)
 
 void si446x_read_rx_fifo(uint8_t * buffer, uint8_t * len)
 {
+	// uint8_t len;
 	si446x_command(FIFO_INFO, 0, 0, len, 1);
-
+	
 	spi_enable();
 	spi_transfer(READ_RX_FIFO);
 	spi_recv_bulk(buffer, *len);

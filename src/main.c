@@ -8,27 +8,32 @@ int main(void)
 	si446x_init();
  
 	// usb_init();
-	uint8_t tx_test[] = {0, 0, 0, 'A', 'D', '0', 'Z', 'F', 4, 'p', 'i', 'n', 'g'};
+	uint8_t tx_test[] = {0, 0, 0, 'A', 'D', '0', 'Z', 'F', 3, 's', 'y', 'n'};
 	uint8_t pushed = 0;
-	uint8_t interrupt_status[9];
+	uint8_t interrupt_status[8];
 	uint8_t rx_buffer[64];
 	uint8_t rx_len;
 
-    while (1)
+	flash_led(5);
+	si446x_clear_rx_fifo();
+    
+	while (1)
 	{
 		if (!gpio_read_pin(nIRQ_PORT, nIRQ_PIN))
 		{
 			si446x_command(GET_INT_STATUS, 0, 0, interrupt_status, sizeof(interrupt_status));
-			if (interrupt_status[3] & 0x10) // packet received
+			if (interrupt_status[2] & 0x10) // packet received
 			{
-				green_led_on();
-				si446x_clear_rx_fifo();
-				// si446x_read_rx_fifo(rx_buffer, &rx_len);
+				si446x_read_rx_fifo(rx_buffer, &rx_len);
+				// flash_led(rx_len);
+				if ((rx_buffer[3] == 'A') && (rx_buffer[4] == 'D') && (rx_buffer[5] == '0') &&(rx_buffer[6] == 'Z') && (rx_buffer[7] == 'F'))
+					green_led_on();
 			}
 
-			if (interrupt_status[3] == 0x08) // crc error...
+			if (interrupt_status[2] == 0x08) // crc error...
 			{
 				red_led_on();
+				si446x_clear_rx_fifo();
 			}
 		}
 
@@ -106,6 +111,27 @@ void green_led_on(void)
 void green_led_off(void)
 {
 	gpio_write_pin(GREEN_LED_PORT, GREEN_LED_PIN, 0);
+}
+
+void flash_led(uint8_t num_flashes)
+{
+	uint8_t red_flashes = (num_flashes >> 4) & 0x0F;
+	uint8_t green_flashes = num_flashes & 0x0F;
+
+	for (int ii = 0; ii < red_flashes; ii++)
+	{
+		red_led_on();
+		delay(600000);
+		red_led_off();
+		delay(600000);
+	}
+	for (int ii = 0; ii < green_flashes; ii++)
+	{
+		green_led_on();
+		delay(600000);
+		green_led_off();
+		delay(600000);
+	}
 }
 
 /*  PINOUT
