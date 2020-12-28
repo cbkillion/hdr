@@ -39,6 +39,16 @@
 #define GET_PH_STATUS           0x21
 #define GET_CHIP_STATUS         0x23
 
+#define PACKET_SENT_INT         0x20
+#define PACKET_RECV_INT         0x10
+#define CRC_ERROR_INT           0x08
+#define TX_FIFO_EMPTY_INT       0x02
+#define RX_FIFO_FULL_INT        0x01
+#define INVALID_SYNC_INT        0x20
+#define PACKET_HANDLER_INT      0x01
+#define MODEM_INT               0x02
+#define CHIP_INT                0x04
+
 void    si446x_init(void);
 void    si446x_power_on_reset(void);
 uint8_t si446x_wait_for_cts(void);
@@ -57,5 +67,7 @@ uint8_t si446x_get_properties(uint16_t first_property, uint8_t count, uint8_t * 
 
 void    si446x_start_tx(uint8_t channel);
 void    si446x_start_rx(uint8_t channel);
+
+void    si446x_test_tx(void);
 
 #endif

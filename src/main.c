@@ -6,49 +6,30 @@ int main(void)
 	gpio_init();
 	spi_init();
 	si446x_init();
- 
-	// usb_init();
-	uint8_t tx_test[] = {0, 0, 0, 'A', 'D', '0', 'Z', 'F', 3, 's', 'y', 'n'};
-	uint8_t pushed = 0;
-	uint8_t interrupt_status[8];
-	uint8_t rx_buffer[64];
-	uint8_t rx_len;
 
-	flash_led(5);
-	si446x_clear_rx_fifo();
-    
+	flash_led(2);
+ 
+	interrupts_init();
+
+	// usb_init();
+
+	uint8_t tx_test[] = {0, 0, 0, 'A', 'D', '0', 'Z', 'F', 5, 'A', 'D', '0', 'Z', 'F'};
+	uint8_t pushed = 0;
+   
+	// TODO: move back to 2-byte length and max of 1024 bytes in packet
+	// TODO: sort out the CRCs
+	// TODO: sort out the whitening
+	// TODO: handle FIFO full and empty events so we can tx/rx packets larger than 64 bytes
+	// TODO: USB comms so we can get some data in and out
+	// TODO: make a class or struct defining message rather than raw array
+
 	while (1)
 	{
-		if (!gpio_read_pin(nIRQ_PORT, nIRQ_PIN))
-		{
-			si446x_command(GET_INT_STATUS, 0, 0, interrupt_status, sizeof(interrupt_status));
-			if (interrupt_status[2] & 0x10) // packet received
-			{
-				si446x_read_rx_fifo(rx_buffer, &rx_len);
-				// flash_led(rx_len);
-				if ((rx_buffer[3] == 'A') && (rx_buffer[4] == 'D') && (rx_buffer[5] == '0') &&(rx_buffer[6] == 'Z') && (rx_buffer[7] == 'F'))
-					green_led_on();
-			}
-
-			if (interrupt_status[2] == 0x08) // crc error...
-			{
-				red_led_on();
-				si446x_clear_rx_fifo();
-			}
-		}
-
-
 		if (read_button() && !pushed)
 		{
-			red_led_off();
-			green_led_off();
-
+			delay(1000000);
 			pushed = 1;
 			si446x_send(tx_test, sizeof(tx_test), 0);
-			
-			// wait for packet sent interrupt, then clear by reading
-			while (gpio_read_pin(nIRQ_PORT, nIRQ_PIN));
-			si446x_command(GET_INT_STATUS, 0, 0, interrupt_status, sizeof(interrupt_status));
 		} 
 		if (!read_button())
 		{
