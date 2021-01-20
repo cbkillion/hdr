@@ -8,7 +8,7 @@ void si446x_init(void)
 	si446x_power_on_reset();
 	si446x_configure(configuration_array);
 	si446x_wait_for_cts();
-	si446x_start_rx(0);
+	si446x_start_rx();
 
 	// si446x_test_tx();
 }
@@ -72,11 +72,11 @@ void si446x_configure(const uint8_t * commands)
 	}
 }
 
-void si446x_send(uint8_t * buffer, uint16_t len, uint8_t channel)
+void si446x_send(uint8_t * buffer, uint16_t len)
 {
 	si446x_write_tx_fifo(buffer, len);
 	red_led_on();
-	si446x_start_tx(channel);
+	si446x_start_tx();
 }
 
 void si446x_write_tx_fifo(uint8_t * buffer, uint8_t len)
@@ -87,27 +87,28 @@ void si446x_write_tx_fifo(uint8_t * buffer, uint8_t len)
 	spi_disable();
 }
 
-void si446x_read_rx_fifo(uint8_t * buffer, uint8_t * len)
+void si446x_read_rx_fifo(void)
 {
 	// get the number of bytes in the rx fifo
-	si446x_command(FIFO_INFO, 0, 0, len, 1);
+	uint8_t num_bytes;
+	si446x_command(FIFO_INFO, 0, 0, &num_bytes, 1);
 	
 	spi_enable();
 	spi_transfer(READ_RX_FIFO);
-	spi_recv_bulk(buffer, *len);
+	spi_recv_bulk(rx_buffer, num_bytes);
 	spi_disable();
 }
 
-void si446x_start_tx(uint8_t channel)
+void si446x_start_tx(void)
 {
 	// enter RX state when done, use individual field settings
-	uint8_t buffer[] = {channel, 0x80, 0x00, 0x00, 0x00, 0x00};
+	uint8_t buffer[] = {/*channel*/ 0x00, 0x80, 0x00, 0x00, 0x00, 0x00};
 	si446x_command(START_TX, buffer, sizeof(buffer), 0, 0);
 }
 
-void si446x_start_rx(uint8_t channel)
+void si446x_start_rx(void)
 {
-	uint8_t buffer[] = {channel, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08};
+	uint8_t buffer[] = {/*channel*/ 0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08};
 	si446x_command(START_RX, buffer, sizeof(buffer), 0, 0);
 }
 

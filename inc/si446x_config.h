@@ -42,20 +42,20 @@
 
 /*
 	Select IEC-16 CRC polynomial and seed with all zeros
-	Select a PN11 whitening polynomial and seed with all ones
+	Select a PN9 whitening polynomial and seed with all ones
 	Enable 4FSK modulation and send CRC MSB first
 	Setup variable length payload: length value is 1 byte, MSB first, length is put in FIFO, field 2 is length, field 3 is variable
 	Packet length adjust = 0
 */
-#define RF_PKT_CRC_CONFIG_12 0x11, 0x12, 0x0B, 0x00, 0x02, 0x05, 0x00, 0xFF, 0xFF, 0x20, 0x22, 0x00, 0x2B, 0x02, 0x00
+#define RF_PKT_CRC_CONFIG_12 0x11, 0x12, 0x0B, 0x00, 0x02, 0x01, 0x08, 0xFF, 0xFF, 0x20, 0x22, 0x00, 0x2B, 0x02, 0x00
 
 /*
 	Set TX FIFO threshold to 0x30
 	Set RX FIFO threshold to 0x30
-	Setup field 1: 8 bytes long, 4FSK, restart the whitening PRNG, restart CRC, transmit CRC, check CRC in rx, enable CRC
+	Setup field 1: 4 bytes long, 4FSK, restart the whitening PRNG, restart CRC, transmit CRC, check CRC in rx, enable CRC
 	Setup field 2: 1 byte long, 4FSK, transmit CRC, check CRC in rx, enable CRC
 */
-#define RF_PKT_RX_THRESHOLD_12 0x11, 0x12, 0x0A, 0x0B, 0x30, 0x30, 0x00, 0x08, 0x14, /*0xAA*/ 0x00, 0x00, 0x01, 0x10, /*0x2A*/ 0x00
+#define RF_PKT_RX_THRESHOLD_12 0x11, 0x12, 0x0A, 0x0B, 0x30, 0x30, 0x00, 0x04, 0x14, /*0xAA*/ 0x00, 0x00, 0x01, 0x10, /*0x2A*/ 0x00
 
 // Setup field 3: up to 255 bytes long, 4FSK, whitening disabled, transmit CRC, check CRC in rx, enable CRC
 #define RF_PKT_FIELD_3_CRC_CONFIG_12 0x11, 0x12, 0x04, 0x15, 0x00, 0xFF, 0x10, /*0x2A*/ 0x00

@@ -13,7 +13,7 @@ int main(void)
 
 	// usb_init();
 
-	uint8_t tx_test[] = {0, 0, 0, 'A', 'D', '0', 'Z', 'F', 5, 'A', 'D', '0', 'Z', 'F'};
+	uint8_t syn[] = {0, 0, 0, 0, 3, 's', 'y', 'n'};
 	uint8_t pushed = 0;
    
 	// TODO: move back to 2-byte length and max of 1024 bytes in packet
@@ -27,10 +27,14 @@ int main(void)
 	{
 		if (read_button() && !pushed)
 		{
-			delay(1000000);
 			pushed = 1;
-			si446x_send(tx_test, sizeof(tx_test), 0);
-		} 
+			
+			red_led_off();
+			green_led_off();
+			
+			si446x_send(syn, sizeof(syn));
+		}
+
 		if (!read_button())
 		{
 			pushed = 0;

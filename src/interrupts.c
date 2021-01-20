@@ -27,10 +27,8 @@ void EXTI0_1_IRQHandler(void)
         if (interrupt_status[2] & PACKET_RECV_INT) // packet received
         {
             green_led_on();
-            si446x_read_rx_fifo(rx_fifo_buffer, &rx_len);
-            
-            if (rx_fifo_buffer[6] == 'Z')
-                green_led_off();
+            si446x_read_rx_fifo();
+            green_led_off();
         }
 
         if (interrupt_status[2] & PACKET_SENT_INT) // packet sent

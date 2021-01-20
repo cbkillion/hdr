@@ -16,7 +16,7 @@
 #define SET_PROPERTY            0x11
 #define GET_PROPERTY            0x12
 #define GPIO_PIN_CONFIG         0x13
-#define FIFO_INFO             0x15
+#define FIFO_INFO               0x15
 #define GET_INT_STATUS          0x20
 #define REQUEST_DEVICE_STATE    0x33
 #define CHANGE_STATE            0x34
@@ -56,18 +56,20 @@ uint8_t si446x_command(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t *
 void    si446x_pin_config(void);
 void    si446x_configure(const uint8_t * commands);
 
-void    si446x_send(uint8_t * buffer, uint16_t len, uint8_t channel);
+void    si446x_send(uint8_t * buffer, uint16_t len);
 void    si446x_write_tx_fifo(uint8_t * buffer, uint8_t len);
 void    si446x_clear_tx_fifo(void);
-void    si446x_read_rx_fifo(uint8_t * buffer, uint8_t * len);
+void    si446x_read_rx_fifo(void);
 void    si446x_clear_rx_fifo(void);
 
 uint8_t si446x_set_properties(uint16_t first_property, uint8_t count, uint8_t * properties);
 uint8_t si446x_get_properties(uint16_t first_property, uint8_t count, uint8_t * properties);
 
-void    si446x_start_tx(uint8_t channel);
-void    si446x_start_rx(uint8_t channel);
+void    si446x_start_tx(void);
+void    si446x_start_rx(void);
 
 void    si446x_test_tx(void);
+
+uint8_t si446x_addr;
 
 #endif

@@ -6,6 +6,7 @@
 #include "spi.h"
 #include "interrupts.h"
 #include "si446x.h"
+#include "radio.h"
 
 #define SDN_PORT        GPIOA
 #define SDN_PIN         3
@@ -25,10 +26,8 @@
 #define nIRQ_PIN        0
 
 volatile uint8_t interrupt_status[8];
-volatile uint8_t rx_fifo_buffer[64];
-volatile uint8_t rx_len;
-
-// need to make rx and tx packet structs
+volatile uint8_t rx_buffer[64];
+volatile uint8_t tx_buffer[64];
 
 void configure_clock(void);
 void gpio_init(void);
