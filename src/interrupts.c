@@ -26,14 +26,14 @@ void EXTI0_1_IRQHandler(void)
     {
         if (interrupt_status[2] & PACKET_RECV_INT) // packet received
         {
-            green_led_on();
+            green_led(ON);
             si446x_read_rx_fifo();
-            green_led_off();
+            green_led(OFF);
         }
 
         if (interrupt_status[2] & PACKET_SENT_INT) // packet sent
         {
-            red_led_off();
+            red_led(OFF);
         }
 
         if (interrupt_status[2] & CRC_ERROR_INT) // crc error...

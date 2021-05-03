@@ -6,7 +6,6 @@
 #include "spi.h"
 #include "interrupts.h"
 #include "si446x.h"
-#include "radio.h"
 
 #define SDN_PORT        GPIOA
 #define SDN_PIN         3
@@ -25,6 +24,9 @@
 #define nIRQ_PORT       GPIOB
 #define nIRQ_PIN        0
 
+#define ON              1
+#define OFF             0
+
 volatile uint8_t interrupt_status[8];
 volatile uint8_t rx_buffer[64];
 volatile uint8_t tx_buffer[64];
@@ -37,10 +39,8 @@ uint16_t read_pin(GPIO_TypeDef * port, uint16_t pin);
 uint16_t read_button(void);
 void delay(uint32_t delay);
 
-void red_led_on(void);
-void red_led_off(void);
-void green_led_on(void);
-void green_led_off(void);
+void red_led(uint8_t state);
+void green_led(uint8_t state);
 
 void flash_led(uint8_t num_flashes);
 

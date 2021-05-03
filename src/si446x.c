@@ -75,8 +75,8 @@ void si446x_configure(const uint8_t * commands)
 void si446x_send(uint8_t * buffer, uint16_t len)
 {
 	si446x_write_tx_fifo(buffer, len);
-	red_led_on();
 	si446x_start_tx();
+	red_led(ON);
 }
 
 void si446x_write_tx_fifo(uint8_t * buffer, uint8_t len)
@@ -148,5 +148,5 @@ void si446x_test_tx(void)
 
 	uint8_t buff6[] = {0x00, 0x30, 0x1F, 0xFF};
 	si446x_command(START_TX, buff6, sizeof(buff6), 0, 0); // START TX
-	green_led_on();
+	green_led(ON);
 }

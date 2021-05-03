@@ -6,19 +6,16 @@ int main(void)
 	gpio_init();
 	spi_init();
 	si446x_init();
+	interrupts_init();
 
 	flash_led(2);
- 
-	interrupts_init();
 
 	// usb_init();
 
-	uint8_t syn[] = {0, 0, 0, 0, 3, 's', 'y', 'n'};
+	uint8_t syn[] = {0, 0, 0, 0, 1, 's'};
 	uint8_t pushed = 0;
    
 	// TODO: move back to 2-byte length and max of 1024 bytes in packet
-	// TODO: sort out the CRCs
-	// TODO: sort out the whitening
 	// TODO: handle FIFO full and empty events so we can tx/rx packets larger than 64 bytes
 	// TODO: USB comms so we can get some data in and out
 	// TODO: make a class or struct defining message rather than raw array
@@ -28,10 +25,6 @@ int main(void)
 		if (read_button() && !pushed)
 		{
 			pushed = 1;
-			
-			red_led_off();
-			green_led_off();
-			
 			si446x_send(syn, sizeof(syn));
 		}
 
@@ -78,24 +71,14 @@ void delay(uint32_t delay)
 		asm("NOP");
 }
 
-void red_led_on(void)
+void red_led(uint8_t state)
 {
-	gpio_write_pin(RED_LED_PORT, RED_LED_PIN, 1);
+	gpio_write_pin(RED_LED_PORT, RED_LED_PIN, state);
 }
 
-void red_led_off(void)
+void green_led(uint8_t state)
 {
-	gpio_write_pin(RED_LED_PORT, RED_LED_PIN, 0);
-}
-
-void green_led_on(void)
-{
-	gpio_write_pin(GREEN_LED_PORT, GREEN_LED_PIN, 1);
-}
-
-void green_led_off(void)
-{
-	gpio_write_pin(GREEN_LED_PORT, GREEN_LED_PIN, 0);
+	gpio_write_pin(GREEN_LED_PORT, GREEN_LED_PIN, state);
 }
 
 void flash_led(uint8_t num_flashes)
@@ -105,17 +88,17 @@ void flash_led(uint8_t num_flashes)
 
 	for (int ii = 0; ii < red_flashes; ii++)
 	{
-		red_led_on();
-		delay(600000);
-		red_led_off();
-		delay(600000);
+		red_led(ON);
+		delay(20000);
+		red_led(OFF);
+		delay(500000);
 	}
 	for (int ii = 0; ii < green_flashes; ii++)
 	{
-		green_led_on();
-		delay(600000);
-		green_led_off();
-		delay(600000);
+		green_led(ON);
+		delay(20000);
+		green_led(OFF);
+		delay(500000);
 	}
 }
 
