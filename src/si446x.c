@@ -1,7 +1,7 @@
 #include "si446x.h"
 #include "main.h"
 
-const uint8_t configuration_array[] = CONFIG_CMD_ARRAY;
+/*const*/ uint8_t configuration_array[] = CONFIG_CMD_ARRAY;
 
 void si446x_init(void)
 {
@@ -61,7 +61,7 @@ uint8_t si446x_wait_for_cts(void)
 	return 0;
 }
 
-void si446x_configure(const uint8_t * commands)
+void si446x_configure(/*const*/ uint8_t * commands)
 {
 	uint8_t cmd_length = commands[0];
 	while (cmd_length > 0)

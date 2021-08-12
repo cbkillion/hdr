@@ -46,7 +46,7 @@ void configure_clock(void)
 
 	// modify the PLL settings
 	RCC->CFGR |= RCC_CFGR_PLLSRC_HSI_DIV2; // set PLL source to be HSI / 2 (4 MHz)
-	RCC->CFGR |= RCC_CFGR_PLLMUL10; // set PLLMUL to 6 (HSI / 2 * 10 = 40 MHz)
+	RCC->CFGR |= RCC_CFGR_PLLMUL10; // set PLLMUL to 10 (HSI / 2 * 10 = 40 MHz)
 	RCC->CFGR |= RCC_CFGR_PPRE_DIV2; // set PClk to SysClock / 2 (20 MHz)
 
 	// enable the PLL and wait for it to turn on
