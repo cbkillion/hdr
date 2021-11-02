@@ -15,7 +15,7 @@ INCLUDE += -I./$(INCDIR)
 # Define the linker script and chip
 LD_SCRIPT = STM32F042K6Tx.ld
 MCU_SPEC  = cortex-m0
-OPTIM = -O0
+OPTIM = -O3
 
 # Define the toolchain
 TOOLCHAIN = /usr

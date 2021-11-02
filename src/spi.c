@@ -7,11 +7,9 @@ void spi_init(void)
 	// initialize the SPI1 bus at 10 MHz
 	// with hardware NSS control (requires GPIO pullup enabled on NSS pin)
 	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; // Enable SPI1 clock
-	SPI1->CR1 |= (SPI_CR1_MSTR);// | (1 << 4); // Master mode; rate = Fpclk / 2
+	SPI1->CR1 |= (SPI_CR1_MSTR | (1 << 3)); // Master mode; rate = Fpclk / 2
 	SPI1->CR2 |= (SPI_CR2_FRXTH | SPI_CR2_SSOE);
-	// SPI1->CR1 |= SPI_CR1_SPE; // Does this need to be here?
-
-	// TODO: DMA transfers...?
+	SPI1->CR1 |= SPI_CR1_SPE; // Does this need to be here?
 }
 
 void spi_enable(void)
@@ -49,6 +47,6 @@ uint8_t spi_transfer(uint8_t data)
 {
 	while(!(SPI1->SR & SPI_SR_TXE)); // wait for tx buffer to be empty
 	IO8(&SPI1->DR) = data;	// start the transfer
-	while(!(SPI1->SR & SPI_SR_RXNE)); // wait for the data to send (should we wait on RXNE...? Yes.)
+	while(!(SPI1->SR & SPI_SR_RXNE)); // wait for the data to send
 	return IO8(&SPI1->DR); // read the response to clear the rx buffer
 }

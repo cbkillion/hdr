@@ -8,11 +8,11 @@ int main(void)
 	si446x_init();
 	interrupts_init();
 
-	flash_led(2);
+	flash_led(0x22);
 
 	// usb_init();
 
-	uint8_t syn[] = {0, 0, 0, 0, 1, 's'};
+	uint8_t syn[] = {0, 0, 0, 0, 5, 'A', 'D', '0', 'Z', 'F'};
 	uint8_t pushed = 0;
    
 	// TODO: move back to 2-byte length and max of 1024 bytes in packet
@@ -22,15 +22,17 @@ int main(void)
 
 	while (1)
 	{
+		// si446x_send(syn, sizeof(syn));
+		// delay(5000000);
 		if (read_button() && !pushed)
 		{
 			pushed = 1;
-			si446x_send(syn, sizeof(syn));
 		}
 
-		if (!read_button())
+		if (!read_button() && pushed)
 		{
 			pushed = 0;
+			si446x_send(syn, sizeof(syn));
 		}
 	}
 }
@@ -104,7 +106,7 @@ void flash_led(uint8_t num_flashes)
 
 /*  PINOUT
 	---------------
-	GPIO0 	--> PB2 -- 	INPUT
+	GPIO0 	--> PA8 -- 	INPUT
 	GPIO1 	--> PB1 -- 	INPUT
 	GPIO2 	--> PA2 -- 	INPUT
 	GPIO3 	--> PA1 -- 	INPUT
@@ -117,11 +119,11 @@ void flash_led(uint8_t num_flashes)
 	MISO 	--> PA6 --  SPI
 	MOSI 	--> PA7 --  SPI
 	---------------
-	D+ 		--> PA11 --  USB
-	D- 		--> PA12 --  USB
+	D- 		--> PA11 --  USB
+	D+ 		--> PA12 --  USB
 	---------------
 	LED_R	-->	PB6 --  OUTPUT
 	LED_G	--> PB7 --  OUTPUT
 	---------------
-	SWITCH	--> PF11 --  INPUT
+	SWITCH	--> PB8 --  INPUT
 */

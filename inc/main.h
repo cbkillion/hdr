@@ -14,11 +14,11 @@
 #define CTS_PORT        GPIOB
 #define CTS_PIN         1
 
-#define BUTTON_PORT     GPIOF
-#define BUTT0N_PIN      11
+#define BUTTON_PORT     GPIOB
+#define BUTT0N_PIN      8
 #define RED_LED_PORT    GPIOB
-#define GREEN_LED_PORT  GPIOB
 #define RED_LED_PIN     6
+#define GREEN_LED_PORT  GPIOB
 #define GREEN_LED_PIN   7
 
 #define nIRQ_PORT       GPIOB
@@ -27,9 +27,9 @@
 #define ON              1
 #define OFF             0
 
-/*volatile*/ uint8_t interrupt_status[8];
-/*volatile*/ uint8_t rx_buffer[64];
-/*volatile*/ uint8_t tx_buffer[64];
+uint8_t interrupt_status[8];
+uint8_t rx_buffer[64];
+uint8_t tx_buffer[64];
 
 void configure_clock(void);
 void gpio_init(void);

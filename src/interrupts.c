@@ -28,7 +28,6 @@ void EXTI0_1_IRQHandler(void)
         {
             green_led(ON);
             si446x_read_rx_fifo();
-            green_led(OFF);
         }
 
         if (interrupt_status[2] & PACKET_SENT_INT) // packet sent

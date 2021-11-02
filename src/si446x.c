@@ -1,7 +1,7 @@
 #include "si446x.h"
 #include "main.h"
 
-/*const*/ uint8_t configuration_array[] = CONFIG_CMD_ARRAY;
+uint8_t configuration_array[] = CONFIG_CMD_ARRAY;
 
 void si446x_init(void)
 {
@@ -9,7 +9,6 @@ void si446x_init(void)
 	si446x_configure(configuration_array);
 	si446x_wait_for_cts();
 	si446x_start_rx();
-
 	// si446x_test_tx();
 }
 
@@ -61,7 +60,7 @@ uint8_t si446x_wait_for_cts(void)
 	return 0;
 }
 
-void si446x_configure(/*const*/ uint8_t * commands)
+void si446x_configure(uint8_t * commands)
 {
 	uint8_t cmd_length = commands[0];
 	while (cmd_length > 0)
@@ -76,7 +75,6 @@ void si446x_send(uint8_t * buffer, uint16_t len)
 {
 	si446x_write_tx_fifo(buffer, len);
 	si446x_start_tx();
-	red_led(ON);
 }
 
 void si446x_write_tx_fifo(uint8_t * buffer, uint8_t len)
@@ -101,14 +99,16 @@ void si446x_read_rx_fifo(void)
 
 void si446x_start_tx(void)
 {
+	red_led(ON);
+
 	// enter RX state when done, use individual field settings
-	uint8_t buffer[] = {/*channel*/ 0x00, 0x80, 0x00, 0x00, 0x00, 0x00};
+	uint8_t buffer[] = {0x00, 0x80, 0x00, 0x00, 0x00, 0x00}; // first byte is channel number
 	si446x_command(START_TX, buffer, sizeof(buffer), 0, 0);
 }
 
 void si446x_start_rx(void)
 {
-	uint8_t buffer[] = {/*channel*/ 0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08};
+	uint8_t buffer[] = {0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08}; // first byte is channel number
 	si446x_command(START_RX, buffer, sizeof(buffer), 0, 0);
 }
 
@@ -132,7 +132,7 @@ void si446x_test_tx(void)
 	si446x_command(POWER_UP, buff, sizeof(buff), 0, 0);
 
 	uint8_t buff1[] = {0x00, 0x00, 0x00};
-	si446x_command(GET_INT_STATUS, buff1, sizeof(buff1), 0, 0);
+	si446x_command(GET_INT_STATUS, buff1, sizeof(buff1), 0, 0); // Clear interrupts
 
 	uint8_t buff2[] = {0x00, 0x04, 0x00, 0x55, 0x00, 0x18, 0x06};
 	si446x_command(SET_PROPERTY, buff2, sizeof(buff2), 0, 0); // GLOBAL CONFIG
