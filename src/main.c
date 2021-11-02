@@ -26,6 +26,7 @@ int main(void)
 		// delay(5000000);
 		if (read_button() && !pushed)
 		{
+			green_led(OFF);
 			pushed = 1;
 		}
 
@@ -104,6 +105,17 @@ void flash_led(uint8_t num_flashes)
 	}
 }
 
+void nss_low(void)
+{
+	gpio_write_pin(NSS_PORT, NSS_PIN, OFF);
+}
+
+void nss_high(void)
+{
+	gpio_write_pin(NSS_PORT, NSS_PIN, ON);
+}
+
+
 /*  PINOUT
 	---------------
 	GPIO0 	--> PA8 -- 	INPUT
@@ -114,7 +126,7 @@ void flash_led(uint8_t num_flashes)
 	---------------
 	SDN 	--> PA3 -- 	OUTPUT
 	---------------
-	nSEL 	--> PA4 --  SPI
+	nSEL 	--> PA4 --  OUTPUT
 	SCLK 	--> PA5 --  SPI
 	MISO 	--> PA6 --  SPI
 	MOSI 	--> PA7 --  SPI

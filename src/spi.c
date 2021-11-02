@@ -4,8 +4,7 @@
 
 void spi_init(void)
 {
-	// initialize the SPI1 bus at 10 MHz
-	// with hardware NSS control (requires GPIO pullup enabled on NSS pin)
+	// initialize the SPI1 bus
 	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; // Enable SPI1 clock
 	SPI1->CR1 |= (SPI_CR1_MSTR | (1 << 3)); // Master mode; rate = Fpclk / 2
 	SPI1->CR2 |= (SPI_CR2_FRXTH | SPI_CR2_SSOE);

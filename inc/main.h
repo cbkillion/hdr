@@ -42,6 +42,9 @@ void delay(uint32_t delay);
 void red_led(uint8_t state);
 void green_led(uint8_t state);
 
+void nss_low(void);
+void nss_high(void);
+
 void flash_led(uint8_t num_flashes);
 
 #endif

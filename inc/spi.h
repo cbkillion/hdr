@@ -3,7 +3,8 @@
 
 #include "stm32f0xx.h"
 
-#define IO8(addr)       (*(volatile uint8_t *)(addr))
+#define IO8(addr)   (*(volatile uint8_t *)(addr))
+#define SPI1_DR     IO8(SPI1_BASE + 0x0C)
 
 void    spi_init(void);
 

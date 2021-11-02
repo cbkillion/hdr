@@ -12,34 +12,30 @@ void si446x_init(void)
 	// si446x_test_tx();
 }
 
-uint8_t si446x_command(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t * rx_buff, uint8_t rx_len)
+void si446x_command(uint8_t cmd, uint8_t * tx_buff, uint8_t tx_len, uint8_t * rx_buff, uint8_t rx_len)
 {
-	uint8_t status = 0;
-
 	// send command
-	spi_enable();
+	nss_low();
 	spi_transfer(cmd);
 	if (tx_len && tx_buff)
 		spi_send_bulk(tx_buff, tx_len);
-	spi_disable();
 
-	// wait for radio to process
+	nss_high();
+
 	si446x_wait_for_cts();
 
 	// read response if required
 	if(rx_len && rx_buff)
 	{
-		spi_enable();
+		nss_low();
 		spi_transfer(READ_CMD_BUFF);
 		si446x_wait_for_cts();
 		if (spi_transfer(0) == 0xFF)
 		{
 			spi_recv_bulk(rx_buff, rx_len);
 		}
-		spi_disable();
+		nss_high();
 	}
-
-	return status;
 }
 
 void si446x_power_on_reset(void)
@@ -79,10 +75,10 @@ void si446x_send(uint8_t * buffer, uint16_t len)
 
 void si446x_write_tx_fifo(uint8_t * buffer, uint8_t len)
 {
-	spi_enable();
+	nss_low();
 	spi_transfer(WRITE_TX_FIFO);
 	spi_send_bulk(buffer, len);
-	spi_disable();
+	nss_high();
 }
 
 void si446x_read_rx_fifo(void)
@@ -91,10 +87,10 @@ void si446x_read_rx_fifo(void)
 	uint8_t num_bytes;
 	si446x_command(FIFO_INFO, 0, 0, &num_bytes, 1);
 	
-	spi_enable();
+	nss_low();
 	spi_transfer(READ_RX_FIFO);
 	spi_recv_bulk(rx_buffer, num_bytes);
-	spi_disable();
+	nss_high();
 }
 
 void si446x_start_tx(void)
