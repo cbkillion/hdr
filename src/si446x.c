@@ -90,6 +90,7 @@ void si446x_read_rx_fifo(void)
 	nss_low();
 	spi_transfer(READ_RX_FIFO);
 	spi_recv_bulk(rx_buffer, num_bytes);
+	
 	nss_high();
 }
 

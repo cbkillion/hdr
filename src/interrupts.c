@@ -28,6 +28,7 @@ void EXTI0_1_IRQHandler(void)
         {
             green_led(ON);
             si446x_read_rx_fifo();
+            new_rx_data = 1;
             green_led(OFF);
         }
 

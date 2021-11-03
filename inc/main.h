@@ -30,6 +30,7 @@
 uint8_t interrupt_status[8];
 uint8_t rx_buffer[64];
 uint8_t tx_buffer[64];
+uint8_t new_rx_data;
 
 void configure_clock(void);
 void gpio_init(void);

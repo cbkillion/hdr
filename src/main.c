@@ -14,7 +14,8 @@ int main(void)
 
 	uint8_t syn[] = {0, 0, 0, 0, 5, 'A', 'D', '0', 'Z', 'F'};
 	uint8_t pushed = 0;
-   
+	new_rx_data = 0;
+
 	// TODO: move back to 2-byte length and max of 1024 bytes in packet
 	// TODO: handle FIFO full and empty events so we can tx/rx packets larger than 64 bytes
 	// TODO: USB comms so we can get some data in and out
@@ -22,6 +23,13 @@ int main(void)
 
 	while (1)
 	{
+		if (new_rx_data)
+		{
+			new_rx_data = 0;
+			if (rx_buffer[5] == 'A')
+				green_led(ON);
+		}
+
 		// si446x_send(syn, sizeof(syn));
 		// delay(5000000);
 		if (read_button() && !pushed)
