@@ -6,7 +6,7 @@ void interrupts_init(void)
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGCOMPEN;
     SYSCFG->EXTICR[0] = 0x00000001; // Set B0, A1, A2 as external triggers
     EXTI->IMR |= 0x00000001; // Unmask line 0 for now (use 0x...7 for lines 1 and 2 also)
-    EXTI->RTSR |= 0x00000006; // Risging edge trigger for pins 1 and 2
+    EXTI->RTSR |= 0x00000006; // Rising edge trigger for pins 1 and 2
     EXTI->FTSR |= 0x00000001; // Falling edge trigger for pin 0
 
     NVIC_SetPriority(EXTI0_1_IRQn, 3);
@@ -28,6 +28,7 @@ void EXTI0_1_IRQHandler(void)
         {
             green_led(ON);
             si446x_read_rx_fifo();
+            green_led(OFF);
         }
 
         if (interrupt_status[2] & PACKET_SENT_INT) // packet sent
